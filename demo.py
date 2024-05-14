@@ -103,35 +103,7 @@ def process_uploaded_file(uploaded_file):
             separator = "\n\n",
             chunk_size = 1000,
             chunk_overlap  = 200,
-            length_function = len,
-            is_separator_regex = False,
-        )
-        all_splits = text_splitter.create_documents([raw_text])
-        print("총 " + str(len(all_splits)) + "개의 passage")
-        
-        # storage
-        vectorstore = FAISS.from_documents(documents=all_splits, embedding=OpenAIEmbeddings())
-
-        return vectorstore, raw_text
-    return None
-
-# generate response using RAG technic
-def generate_response(query_text, vectorstore, callback):
-
-    # retriever
-    docs_list = vectorstore.similarity_search(query_text, k=3)
-    docs = ""
-    for i, doc in enumerate(docs_list):
-        docs += f"'문서{i+1}':{doc.page_content}\n"
-    print(docs)
-        
-    # generator
-    llm = ChatOpenAI(model_name="gpt-3.5-turbo", temperature=0, streaming=True, callbacks=[callback])
-    
-    # chaining
-    rag_prompt = [
-        SystemMessage(
-            content="너는 문서에 대해 질의응답을 하는 '서울대'야. 주어진 문서를 참고하여 사용자의 질문에 답변을 해줘. 문서에 내용이 정확하게 나와있지 않으면 너의 지식 선에서 잘 얘기해줘. 답변은 이모티콘을 넣어서 귀엽고 깜찍하게 해줘! 답변을 잘하면 200달러 팁을 줄게"
+            length_function = len로 사용자의 질문에 답변을 해줘. 문서에 내용이 나와있지 않은 내용은 답변을 해서는 안돼. 답변은 법률가 스타일로 친절하게 해줘."
         ),
         HumanMessage(
             content=f"질문:{query_text}\n\n{docs}"
@@ -150,7 +122,7 @@ def generate_summarize(raw_text, callback):
     # prompt formatting
     rag_prompt = [
         SystemMessage(
-            content="다음 나올 문서를 '친한 친구 스타일'로 요약해줘."
+            content="다음 나올 문서를 선생님 스타일로 요약해줘."
         ),
         HumanMessage(
             content=raw_text
@@ -162,8 +134,8 @@ def generate_summarize(raw_text, callback):
 
 
 # page title
-st.set_page_config(page_title='🦜🔗 서울대학교 문서 기반 요약 및 QA 챗봇')
-st.title('🦜🔗 SNU 서울대학교 문서 기반 요약 및 QA 챗봇')
+st.set_page_config(page_title='🦜🔗 공무집행을 도와주는 Law-bot')
+st.title('🦜🔗 공무집행을 도와주는 Law-bot')
 
 import os
 api_key = st.sidebar.text_input("Enter your OpenAI API Key", type="password")
@@ -186,7 +158,7 @@ if uploaded_file:
 if "messages" not in st.session_state:
     st.session_state["messages"] = [
         ChatMessage(
-            role="assistant", content="하이 :)  저는 서울대학교 문서에 대한 이해를 도와주는 챗봇입니다. 어떤게 궁금하신가요?"
+            role="assistant", content="안녕하세요! 저는 공무원의 업무 집행을 도와주는 챗봇입니다. 어떤게 궁금하신가요?"
         )
     ]
 
@@ -195,7 +167,7 @@ for msg in st.session_state.messages:
     st.chat_message(msg.role).write(msg.content)
     
 # message interaction
-if prompt := st.chat_input("'요약'이라고 입력해보세요!"):
+if prompt := st.chat_input("규정에 대하여 궁금한 내용을 자유롭게 입력해보세요!"):
     st.session_state.messages.append(ChatMessage(role="user", content=prompt))
     st.chat_message("user").write(prompt)
 
