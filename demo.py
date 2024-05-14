@@ -150,7 +150,7 @@ def generate_summarize(raw_text, callback):
     # prompt formatting
     rag_prompt = [
         SystemMessage(
-            content="다음 나올 문서를 '래퍼 스타일'로 요약해줘. 중요한 내용만."
+            content="다음 나올 문서를 '친한 친구 스타일'로 요약해줘."
         ),
         HumanMessage(
             content=raw_text
