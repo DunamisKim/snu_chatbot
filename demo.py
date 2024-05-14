@@ -103,7 +103,7 @@ def process_uploaded_file(uploaded_file):
             separator = "\n\n",
             chunk_size = 1000,
             chunk_overlap  = 200,
-            length_function = len로 사용자의 질문에 답변을 해줘. 문서에 내용이 나와있지 않은 내용은 답변을 해서는 안돼. 답변은 법률가 스타일로 친절하게 해줘."
+            length_function = "문서에 내용이 나와있지 않은 내용은 답변을 하지마. 답변은 법률가 스타일로 친절하게 해줘."
         ),
         HumanMessage(
             content=f"질문:{query_text}\n\n{docs}"
@@ -122,7 +122,7 @@ def generate_summarize(raw_text, callback):
     # prompt formatting
     rag_prompt = [
         SystemMessage(
-            content="다음 나올 문서를 선생님 스타일로 요약해줘."
+            content= "다음 나올 문서를 법률가 스타일로 요약해줘."
         ),
         HumanMessage(
             content=raw_text
