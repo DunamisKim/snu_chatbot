@@ -126,7 +126,7 @@ def generate_response(query_text, vectorstore, callback):
     print(docs)
         
     # generator
-    llm = ChatOpenAI(model_name="gpt-4", temperature=0, streaming=True, callbacks=[callback])
+    llm = ChatOpenAI(model_name="gpt-3.5", temperature=0, streaming=True, callbacks=[callback])
     
     # chaining
     rag_prompt = [
@@ -163,7 +163,7 @@ def generate_summarize(raw_text, callback):
 
 # page title
 st.set_page_config(page_title='🦜🔗 서울대학교 문서 기반 요약 및 QA 챗봇')
-st.title('🦜🔗 서울대학교 문서 기반 요약 및 QA 챗봇')
+st.title('🦜🔗 SNU 서울대학교 문서 기반 요약 및 QA 챗봇')
 
 import os
 api_key = st.sidebar.text_input("Enter your OpenAI API Key", type="password")
